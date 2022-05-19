@@ -64,6 +64,9 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+	PlayerInputComponent->BindAction("FireButton", IE_Pressed, this, &AShooterCharacter::FireWeapon);
+	//PlayerInputComponent->BindAction("FireButton", IE_Released, this, &ACharacter::StopJumping);
 }
 
 void AShooterCharacter::MoveForward(float Value)
@@ -105,4 +108,9 @@ void AShooterCharacter::TurnAtRate(float Rate)
 void AShooterCharacter::LookAtRate(float Rate)
 {
 	AddControllerPitchInput(Rate * BaseLookupRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AShooterCharacter::FireWeapon()
+{
+	UE_LOG(LogTemp, Warning, TEXT("FireWeapon"));
 }
