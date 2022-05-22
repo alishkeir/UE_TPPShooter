@@ -8,6 +8,7 @@
 #include "Sound/SoundCue.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "DrawDebugHelpers.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter():
@@ -143,17 +144,27 @@ void AShooterCharacter::FireWeapon()
 
 		const FVector End{Start + RotationAxis * 50'000.f};
 
+		FVector BeamEndPoint{End};
+
 		GetWorld()->LineTraceSingleByChannel(FireHit, Start, End, ECollisionChannel::ECC_Visibility);
 
 		if (FireHit.bBlockingHit)
 		{
-			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f);
-			DrawDebugPoint(GetWorld(), FireHit.Location, 5.f, FColor::Red, false, 2.f);
+			//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f); ///  draw red line from the weapon muzzle to max of 50,000 unit to the front (can be lower if it hits something)
+			//DrawDebugPoint(GetWorld(), FireHit.Location, 5.f, FColor::Red, false, 2.f); /// draw a point on the hit location
+
+			BeamEndPoint = FireHit.Location; /// set beam end point to the hit point location
 
 			if (ImpactParticles)
 			{
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, FireHit.Location);
 			}
+		}
+
+		if (BeamParticles)
+		{
+			UParticleSystemComponent* Beam{UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BeamParticles, SocketTransform)};
+			Beam->SetVectorParameter(FName("Target"), BeamEndPoint); ///  set the target of the beam from "Target Name" parameter in the target section of the beam particles system
 		}
 	}
 

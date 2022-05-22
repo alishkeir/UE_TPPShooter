@@ -67,13 +67,17 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 		class UParticleSystem* MuzzleFlash;
 
-	/// montage for firing the weapon
+	/// Montage for firing the weapon
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 		class UAnimMontage* HipFireMontage;
 
-	/// particles spawn upon bullet impact
+	/// Particles spawn upon bullet impact
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 		UParticleSystem* ImpactParticles;
+
+	/// Smoke trail for bullets
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+		UParticleSystem* BeamParticles;
 
 public:
 
