@@ -79,6 +79,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 		UParticleSystem* BeamParticles;
 
+	bool GetBeamAndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+
 public:
 
 	/// Returns CameraBoom subobject
