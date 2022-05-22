@@ -30,14 +30,14 @@ AShooterCharacter::AShooterCharacter():
 
 	/// Don't rotate character with controller rotating
 	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false; /// character can rotate to Yaw controller rotation
 	bUseControllerRotationRoll = false;
-	bUseControllerRotationYaw = true; /// character can rotate to Yaw controller rotation
 
 	/// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = false; /// character does not turn into the direction of the input ...
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); /// ... at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
-	GetCharacterMovement()->AirControl = 0.3;
+	GetCharacterMovement()->AirControl = 0.2f;
 }
 
 // Called when the game starts or when spawned
