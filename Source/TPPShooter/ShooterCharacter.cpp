@@ -30,7 +30,7 @@ AShooterCharacter::AShooterCharacter():
 
 	/// Don't rotate character with controller rotating
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false; /// character can rotate to Yaw controller rotation
+	bUseControllerRotationYaw = true; /// character can rotate to Yaw controller rotation
 	bUseControllerRotationRoll = false;
 
 	/// Configure character movement
