@@ -22,18 +22,19 @@ AShooterCharacter::AShooterCharacter():
 	CameraBoom->SetupAttachment(RootComponent); /// attach to root compnent
 	CameraBoom->TargetArmLength = 300.f; /// camera follow the player at this value
 	CameraBoom->bUsePawnControlRotation = true; /// rotate the arm based on the controller
+	CameraBoom->SocketOffset = FVector(0.f, 50.f, 50.f);
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera")); /// create follow camera
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); /// attach camera to spring arm
 	FollowCamera->bUsePawnControlRotation = false; /// we only need the camera to follow CameraBoom, not to rotate with controller
 
 	/// Don't rotate character with controller rotating
-	bUseControllerRotationYaw = false;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = true; /// character can rotate to Yaw controller rotation
 
 	/// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; /// character turns into the direction of the input ...
+	GetCharacterMovement()->bOrientRotationToMovement = false; /// character does not turn into the direction of the input ...
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); /// ... at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.3;
