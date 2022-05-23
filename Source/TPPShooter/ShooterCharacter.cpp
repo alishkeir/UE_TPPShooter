@@ -226,6 +226,20 @@ void AShooterCharacter::Lookup(float Value)
 	AddControllerPitchInput(Value * LookupScaleFactor);
 }
 
+void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
+{
+	FVector2D WalkSpeedRange{0.f, 600.f};
+
+	FVector2D VelocityMultiplierRange{0.f, 1.f};
+
+	FVector Velocity{GetVelocity()};
+	Velocity.Z = 0;
+
+	CrosshairVelocityFactor = FMath::GetMappedRangeValueClamped(WalkSpeedRange, VelocityMultiplierRange, Velocity.Size());
+
+	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor;
+}
+
 void AShooterCharacter::MoveForward(float Value)
 {
 	if (Controller != nullptr && Value != 0.f)

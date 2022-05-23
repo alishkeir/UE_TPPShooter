@@ -154,6 +154,28 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 		float MouseAimingLookupRate;
 
+	/// Detertmine the spread of the crosshair
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crossharis", meta = (AllowPrivateAccess = "true"))
+		floar CrosshairSpreadMultiplier;
+
+	/// Velocity component for crosshair spread
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crossharis", meta = (AllowPrivateAccess = "true"))
+		float CrosshairVelocityFactor;
+
+	/// In air component for crosshair spread
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crossharis", meta = (AllowPrivateAccess = "true"))
+		float CrosshairInAirFactor;
+
+	/// Aim component for crosshair spread
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crossharis", meta = (AllowPrivateAccess = "true"))
+		float CrosshairAimFactor;
+
+	/// Shooting component for crosshair spread
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crossharis", meta = (AllowPrivateAccess = "true"))
+		float  CrosshairShootingFactor;
+
+	void CalculateCrosshairSpread(float DeltaTime);
+
 public:
 
 	/// Returns CameraBoom subobject
