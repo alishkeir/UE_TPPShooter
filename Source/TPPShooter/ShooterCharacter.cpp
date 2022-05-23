@@ -12,13 +12,32 @@
 
 // Sets default values
 AShooterCharacter::AShooterCharacter():
+
+	/// Base rates for turning / lookup
 	BaseTurnRate(45.f),
 	BaseLookupRate(45.f),
+
+	/// Turn rates for aiming / not aiming
+	HipTurnRate(90.f),
+	HipLooupRate(90.f),
+	AimingTurnRate(20.f),
+	AimingLookupRate(20.f),
+
+	/// true when aiming
 	bAiming(false),
+
+	/// Camera FOV Values
 	CameraDefaultFOV(0.f), /// set in BeginPlay()
 	CameraZoomedFOV(50.f),
+	CameraCurrentFOV(0.f),
 	ZoomInterpSpeed(20.f),
-	CameraCurrentFOV(0.f)
+
+	/// Mouse look sensitivity scale factors
+	MouseHipTurnRate(1.f),
+	MouseHipLookupRate(1.f),
+	MouseAimingTurnRate(0.4f),
+	MouseAimingLookupRate(0.4f)
+
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -78,8 +97,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis("TurnRate", this, &AShooterCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AShooterCharacter::LookAtRate);
 
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("Turn", this, &AShooterCharacter::Turn);
+	PlayerInputComponent->BindAxis("LookUp", this, &AShooterCharacter::Lookup);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
@@ -166,6 +185,45 @@ void AShooterCharacter::CameraInterpZoom(float DeltaTime)
 	}
 
 	GetFollowCamera()->SetFieldOfView(CameraCurrentFOV); /// set current camera FOV
+}
+
+void AShooterCharacter::SetLookRates()
+{
+	if (bAiming)
+	{
+		BaseTurnRate = AimingTurnRate;
+		BaseLookupRate = AimingLookupRate;
+	} else
+	{
+		BaseTurnRate = HipTurnRate;
+		BaseLookupRate = HipLooupRate;
+	}
+}
+
+void AShooterCharacter::Turn(float Value)
+{
+	float TurnScaleFactor;
+	if (bAiming)
+	{
+		TurnScaleFactor = MouseAimingTurnRate;
+	} else
+	{
+		TurnScaleFactor = MouseHipTurnRate;
+	}
+	AddControllerYawInput(Value * TurnScaleFactor);
+}
+
+void AShooterCharacter::Lookup(float Value)
+{
+	float LookupScaleFactor;
+	if (bAiming)
+	{
+		LookupScaleFactor = MouseAimingLookupRate;
+	} else
+	{
+		LookupScaleFactor = MouseHipLookupRate;
+	}
+	AddControllerPitchInput(Value * LookupScaleFactor);
 }
 
 void AShooterCharacter::MoveForward(float Value)
