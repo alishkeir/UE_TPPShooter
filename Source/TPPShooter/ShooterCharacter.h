@@ -97,6 +97,16 @@ private:
 	/// Zoomed Camera Field Of View Value
 	float CameraZoomedFOV;
 
+	/// Current Field Of View this frame
+	float CameraCurrentFOV;
+
+	/// Inter speed for zooming when aiming
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+		float ZoomInterpSpeed;
+
+	/// handle interpolation for zoom when aiming
+	void CameraInterpZoom(float DeltaTime);
+
 public:
 
 	/// Returns CameraBoom subobject
