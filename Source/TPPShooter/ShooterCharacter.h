@@ -118,4 +118,6 @@ public:
 	void MoveForward(float Value); /// called for forward/backward inputs
 
 	void MoveRight(float Value); /// called for right/left inputs
+
+	FORCEINLINE bool GetAiming() const { return bAiming; }
 };
