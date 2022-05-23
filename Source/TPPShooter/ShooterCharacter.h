@@ -81,6 +81,22 @@ private:
 
 	bool GetBeamAndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
 
+	/// true when aiming
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+		bool bAiming;
+
+	/// Set bAiming to true
+	void AimingButtonPressed();
+
+	/// Set bAiming to false
+	void AimingButtonReleased();
+
+	/// Default Camera Field Of View Value
+	float CameraDefaultFOV;
+
+	/// Zoomed Camera Field Of View Value
+	float CameraZoomedFOV;
+
 public:
 
 	/// Returns CameraBoom subobject
