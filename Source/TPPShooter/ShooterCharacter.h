@@ -186,7 +186,7 @@ public:
 	/// Returns FollowCamera subobject
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	void MoveForward(float Value); // called for forward/backward inputs
+	void MoveForward(float Value); /// called for forward/backward inputs
 
 	void MoveRight(float Value); /// called for right/left inputs
 
