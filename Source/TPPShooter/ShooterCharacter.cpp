@@ -36,7 +36,14 @@ AShooterCharacter::AShooterCharacter():
 	MouseHipTurnRate(1.f),
 	MouseHipLookupRate(1.f),
 	MouseAimingTurnRate(0.4f),
-	MouseAimingLookupRate(0.4f)
+	MouseAimingLookupRate(0.4f),
+
+	/// Crosshair spread factors
+	CrosshairSpreadMultiplier(0.f),
+	CrosshairVelocityFactor(0.f),
+	CrosshairInAirFactor(0.f),
+	CrosshairAimFactor(0.f),
+	CrosshairShootingFactor(0.f)
 
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -245,10 +252,19 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
 		CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, 1.f, DeltaTime, 2.25f); // spread the crosshairs slowly while in air
 	} else // is on the ground
 	{
-		CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, 0.f, DeltaTime, 30.f);  // shrink the crosshairs fast while on the ground
+		CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, 0.f, DeltaTime, 30.f);  // reset/shrink the crosshairs fast back to normal while on the ground
 	}
 
-	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor + CrosshairInAirFactor;
+	/// calculate CrosshairAimFactor
+	if (bAiming) // if aiming
+	{
+		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, -0.4f, DeltaTime, 10.f); // shrink the crosshairs slowly while aiming
+	} else // if not aiming
+	{
+		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.f, DeltaTime, 20.f);  // reset/spread the crosshairs fast back to normal while on the ground
+	}
+
+	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor + CrosshairInAirFactor + CrosshairAimFactor;
 }
 
 void AShooterCharacter::MoveForward(float Value)
