@@ -43,7 +43,11 @@ AShooterCharacter::AShooterCharacter():
 	CrosshairVelocityFactor(0.f),
 	CrosshairInAirFactor(0.f),
 	CrosshairAimFactor(0.f),
-	CrosshairShootingFactor(0.f)
+	CrosshairShootingFactor(0.f),
+
+	/// Bullets fire timer variables
+	ShootTimeDuration(0.05f),
+	bFiringBullet(false)
 
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -53,7 +57,7 @@ AShooterCharacter::AShooterCharacter():
 	CameraBoom->SetupAttachment(RootComponent); /// attach to root compnent
 	CameraBoom->TargetArmLength = 260.f; /// camera follow the player at this value
 	CameraBoom->bUsePawnControlRotation = true; /// rotate the arm based on the controller
-	CameraBoom->SocketOffset = FVector(0.f, 50.f, 50.f);
+	CameraBoom->SocketOffset = FVector(0.f, 70.f, 70.f);
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera")); /// create follow camera
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); /// attach camera to spring arm
@@ -130,7 +134,6 @@ bool AShooterCharacter::GetBeamAndLocation(const FVector& MuzzleSocketLocation, 
 
 	/// get screen space location of crosshairs
 	FVector2D CrosshairLocation(ViewportSize.X / 2.f, ViewportSize.Y / 2.f); /// get criosshair location
-	CrosshairLocation.Y -= 30.f; /// decrease the size of the Y Axis as we set in our blueprints
 	FVector CrosshairWorldPosition;
 	FVector CrosshairWorldDirection;
 
@@ -264,7 +267,28 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
 		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.f, DeltaTime, 20.f);  // reset/spread the crosshairs fast back to normal while on the ground
 	}
 
-	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor + CrosshairInAirFactor + CrosshairAimFactor;
+	/// True 0.05 sec after firing
+	if (bFiringBullet)
+	{
+		CrosshairShootingFactor = FMath::FInterpTo(CrosshairShootingFactor, 0.3f, DeltaTime, 70.f); // spread the crosshairs while shooting
+	} else
+	{
+		CrosshairShootingFactor = FMath::FInterpTo(CrosshairShootingFactor, 0.f, DeltaTime, 70.f); // reset/spread the the crosshairs while not shooting
+	}
+
+	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor + CrosshairInAirFactor + CrosshairAimFactor + CrosshairShootingFactor;
+}
+
+void AShooterCharacter::StartCrosshairBulletFire()
+{
+	bFiringBullet = true;
+
+	GetWorldTimerManager().SetTimer(CrosshairShootTimer, this, &AShooterCharacter::FinishCrosshairBulletFire, ShootTimeDuration);
+}
+
+void AShooterCharacter::FinishCrosshairBulletFire()
+{
+	bFiringBullet = false;
 }
 
 void AShooterCharacter::MoveForward(float Value)
@@ -352,6 +376,9 @@ void AShooterCharacter::FireWeapon()
 				}
 			}
 		}
+
+		/// start bullet fire timer for crosshair
+		StartCrosshairBulletFire();
 	}
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();

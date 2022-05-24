@@ -128,6 +128,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crossharis", meta = (AllowPrivateAccess = "true"))
 		float  CrosshairShootingFactor;
 
+	float ShootTimeDuration;
+
+	bool bFiringBullet;
+
+	FTimerHandle CrosshairShootTimer;
+
 protected:
 
 	// Called when the game starts or when spawned
@@ -169,8 +175,12 @@ protected:
 	*/
 	void Lookup(float Vale);
 
-	///
 	void CalculateCrosshairSpread(float DeltaTime);
+
+	void StartCrosshairBulletFire();
+
+	UFUNCTION()
+		void FinishCrosshairBulletFire();
 
 public:
 
