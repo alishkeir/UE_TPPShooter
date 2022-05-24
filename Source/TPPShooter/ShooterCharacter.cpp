@@ -82,6 +82,8 @@ void AShooterCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	CameraInterpZoom(DeltaTime);
+
+	CalculateCrosshairSpread(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -268,6 +270,11 @@ void AShooterCharacter::MoveRight(float Value)
 
 		AddMovementInput(Direction, Value);
 	}
+}
+
+float AShooterCharacter::GetCrosshairSpreadMultiplier() const
+{
+	return CrosshairSpreadMultiplier;
 }
 
 void AShooterCharacter::TurnAtRate(float Rate)

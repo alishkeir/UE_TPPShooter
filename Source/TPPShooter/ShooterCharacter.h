@@ -12,34 +12,9 @@ class TPPSHOOTER_API AShooterCharacter: public ACharacter
 	GENERATED_BODY()
 
 public:
+
 	// Sets default values for this character's properties
 	AShooterCharacter();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	/**
-	 * @brief  called via input to turn at given rate
-	 * @param Rate this is a normalized rate, i.e. 1.0 means 100% of the desired turn rate
-	*/
-	void TurnAtRate(float Rate);
-
-	/**
-	* @brief  called via input to looktp/lookdown at given rate
-	* @param Rate this is a normalized rate, i.e. 1.0 means 100% of the desired look rate
-	*/
-	void LookAtRate(float Rate);
-
-	/* called when the Fire Button is pressed */
-	void FireWeapon();
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
 
@@ -85,12 +60,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 		bool bAiming;
 
-	/// Set bAiming to true
-	void AimingButtonPressed();
-
-	/// Set bAiming to false
-	void AimingButtonReleased();
-
 	/// Default Camera Field Of View Value
 	float CameraDefaultFOV;
 
@@ -123,21 +92,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 		float AimingLookupRate;
 
-	/// Set BaseTurnRate and BaseLookupRates based on aiming
-	void SetLookRates();
-
-	/**
-	 * @brief Rotate controller based on mouse X movement
-	 * @param Value The input  value from the mouse movement
-	*/
-	void Turn(float Value);
-
-	/**
-	* @brief Rotate controller based on mouse Y movement
-	* @param Value The input  value from the mouse movement
-	*/
-	void Lookup(float Vale);
-
 	/// Scale factor for mouse look sensitivity. Turn rate when not aiming
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 		float MouseHipTurnRate;
@@ -156,7 +110,7 @@ private:
 
 	/// Detertmine the spread of the crosshair
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crossharis", meta = (AllowPrivateAccess = "true"))
-		floar CrosshairSpreadMultiplier;
+		float CrosshairSpreadMultiplier;
 
 	/// Velocity component for crosshair spread
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crossharis", meta = (AllowPrivateAccess = "true"))
@@ -174,9 +128,57 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crossharis", meta = (AllowPrivateAccess = "true"))
 		float  CrosshairShootingFactor;
 
+protected:
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	/**
+	 * @brief  called via input to turn at given rate
+	 * @param Rate this is a normalized rate, i.e. 1.0 means 100% of the desired turn rate
+	*/
+	void TurnAtRate(float Rate);
+
+	/**
+	* @brief  called via input to looktp/lookdown at given rate
+	* @param Rate this is a normalized rate, i.e. 1.0 means 100% of the desired look rate
+	*/
+	void LookAtRate(float Rate);
+
+	/* called when the Fire Button is pressed */
+	void FireWeapon();
+
+	/// Set bAiming to true
+	void AimingButtonPressed();
+
+	/// Set bAiming to false
+	void AimingButtonReleased();
+
+	/// Set BaseTurnRate and BaseLookupRates based on aiming
+	void SetLookRates();
+
+	/**
+	 * @brief Rotate controller based on mouse X movement
+	 * @param Value The input  value from the mouse movement
+	*/
+	void Turn(float Value);
+
+	/**
+	* @brief Rotate controller based on mouse Y movement
+	* @param Value The input  value from the mouse movement
+	*/
+	void Lookup(float Vale);
+
+	///
 	void CalculateCrosshairSpread(float DeltaTime);
 
 public:
+
+	/// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	/// Returns CameraBoom subobject
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -184,9 +186,12 @@ public:
 	/// Returns FollowCamera subobject
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	void MoveForward(float Value); /// called for forward/backward inputs
+	void MoveForward(float Value); // called for forward/backward inputs
 
 	void MoveRight(float Value); /// called for right/left inputs
 
 	FORCEINLINE bool GetAiming() const { return bAiming; }
+
+	UFUNCTION(BlueprintCallable)
+		float GetCrosshairSpreadMultiplier() const;
 };
