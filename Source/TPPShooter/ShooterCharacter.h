@@ -54,7 +54,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 		UParticleSystem* BeamParticles;
 
-	bool GetBeamAndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
 
 	/// true when aiming
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
@@ -202,6 +202,14 @@ protected:
 
 	UFUNCTION()
 		void AutoFireReset();
+
+	/**
+	 * @brief check if the crosshair is pointing at the weapon location
+	 * @param OutHitResult GG
+	 * @param OutHitLocation
+	 * @return true or false
+	*/
+	bool TraceUnderCrosshairs(FHitResult& OutHitResult, FVector& OutHitLocation);
 
 public:
 
