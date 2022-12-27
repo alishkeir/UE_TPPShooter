@@ -143,8 +143,22 @@ private:
 	/// Rate of automatic gun fire
 	float AutomaticFireRate;
 
-	/// Sets a timer between gun shots
+	// Sets a timer between gun shots
 	FTimerHandle AutoFireTimer;
+
+	// True is we should trace every frame for items
+	bool bShouldTraceForItems;
+
+	// Number of overlapped AItems
+	int8 OverlappedItemCount;
+
+	// To store ref to the last item we hit last frame
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Items", meta = (AllowPrivateAccess = "true"))
+		class AItem* TraceHitItemLastFrame;
+
+	// To store ref to the item we are overlapping
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Items", meta = (AllowPrivateAccess = "true"))
+		class AItem* OverlappedItem;
 
 protected:
 
@@ -205,11 +219,14 @@ protected:
 
 	/**
 	 * @brief check if the crosshair is pointing at the weapon location
-	 * @param OutHitResult GG
-	 * @param OutHitLocation
+	 * @param OutHitResult => Result of the hit event
+	 * @param OutHitLocation => Location of the hit event
 	 * @return true or false
 	*/
 	bool TraceUnderCrosshairs(FHitResult& OutHitResult, FVector& OutHitLocation);
+
+	// Trace for items if overlapped item count is > 0
+	void TraceForItems();
 
 public:
 
@@ -233,4 +250,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		float GetCrosshairSpreadMultiplier() const;
+
+	FORCEINLINE int8 GetOverlappedItemCount() const { return OverlappedItemCount; }
+
+	// Adds/Subtracts to/from OverlappedItemCount and update bShouldTraceForItems
+	void IncrementOverlappedItemCount(int8 Amount);
+
+	FORCEINLINE AItem* GetOverlappedItem() { return OverlappedItem; }
+	FORCEINLINE void SetOverlappedItem(AItem* Item) { OverlappedItem = Item; }
 };

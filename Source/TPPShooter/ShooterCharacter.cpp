@@ -56,7 +56,10 @@ AShooterCharacter::AShooterCharacter():
 
 	bFireButtonPressed(false),
 	bShouldFire(true),
-	AutomaticFireRate(0.1f)
+	AutomaticFireRate(0.1f),
+
+	// Item trace variables
+	bShouldTraceForItems(false)
 
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -133,6 +136,48 @@ bool AShooterCharacter::TraceUnderCrosshairs(FHitResult& OutHitResult, FVector& 
 	return false;
 }
 
+void AShooterCharacter::TraceForItems()
+{
+	if (bShouldTraceForItems)
+	{
+		FHitResult ItemTraceResult;
+		FVector HitLocation;
+
+		TraceUnderCrosshairs(ItemTraceResult, HitLocation);
+
+		if (ItemTraceResult.bBlockingHit)
+		{
+			AItem* HitItem = Cast<AItem>(ItemTraceResult.Actor);
+
+			if (HitItem && HitItem->GetPickupWidget())
+			{
+				// Show item's pickup widget
+				if (HitItem == GetOverlappedItem())
+				{
+					HitItem->GetPickupWidget()->SetVisibility(true);
+				}
+			}
+
+			// We hit an AItem last frame
+			if (TraceHitItemLastFrame)
+			{
+				if (HitItem != TraceHitItemLastFrame)
+				{
+					// We are hitting a different AItem this frame from the last frame, or AItem is a nullptr
+					TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);
+				}
+			}
+
+			// Store a ref to HitItem for next frame
+			TraceHitItemLastFrame = HitItem;
+		}
+	} else if (TraceHitItemLastFrame)
+	{
+		// No longer overlapping any item, last item should not show any widget
+		TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);
+	}
+}
+
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)
 {
@@ -144,19 +189,7 @@ void AShooterCharacter::Tick(float DeltaTime)
 	// Calculate crosshair spread multiplier
 	CalculateCrosshairSpread(DeltaTime);
 
-	FHitResult ItemTraceResult;
-	FVector HitLocation;
-	TraceUnderCrosshairs(ItemTraceResult, HitLocation);
-
-	if (ItemTraceResult.bBlockingHit)
-	{
-		AItem* HitItem = Cast<AItem>(ItemTraceResult.Actor);
-		if (HitItem && HitItem->GetPickupWidget())
-		{
-			// Show item's pickup widget
-			HitItem->GetPickupWidget()->SetVisibility(true);
-		}
-	}
+	TraceForItems();
 }
 
 // Called to bind functionality to input
@@ -399,6 +432,19 @@ void AShooterCharacter::MoveRight(float Value)
 float AShooterCharacter::GetCrosshairSpreadMultiplier() const
 {
 	return CrosshairSpreadMultiplier;
+}
+
+void AShooterCharacter::IncrementOverlappedItemCount(int8 Amount)
+{
+	if (OverlappedItemCount + Amount <= 0)
+	{
+		OverlappedItemCount = 0;
+		bShouldTraceForItems = false;
+	} else
+	{
+		OverlappedItemCount += Amount;
+		bShouldTraceForItems = true;
+	}
 }
 
 void AShooterCharacter::TurnAtRate(float Rate)
