@@ -67,6 +67,11 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ItemProperties", meta = (AllowPrivateAccess = "true"))
 		FString ItemName;
 
+	/**
+	 * The count of ammo which appears on the PickupWidget
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ItemProperties", meta = (AllowPrivateAccess = "true"))
+		int32 ItemCount;
 public:
 
 	FORCEINLINE UWidgetComponent* GetPickupWidget() const { return PickupWidget; };
