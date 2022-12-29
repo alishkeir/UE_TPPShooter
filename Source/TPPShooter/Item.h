@@ -6,6 +6,17 @@
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
+UENUM(BlueprintType)
+enum class EIemRarity:uint8
+{
+	EIR_Damaged UMETA(DisplayName = "Damaged"),
+	EIR_Common UMETA(DisplayName = "Common"),
+	EIR_Uncommon UMETA(DisplayName = "Uncommon"),
+	EIR_Rare UMETA(DisplayName = "Rare"),
+	EIR_Legendary UMETA(DisplayName = "Legendary"),
+	EIR_MAX UMETA(DisplayName = "DEFAULTMAX")
+};
+
 UCLASS()
 class TPPSHOOTER_API AItem: public AActor
 {
@@ -30,6 +41,11 @@ protected:
 	*/
 	UFUNCTION()
 		void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	/**
+	 * Sets the ActiveStars array of bools based on rarity
+	*/
+	void SetActiveStars();
 
 public:
 	//Called every frame
@@ -72,6 +88,15 @@ private:
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ItemProperties", meta = (AllowPrivateAccess = "true"))
 		int32 ItemCount;
+
+	/**
+	 * Rarity of the item - determines number of starts in PickupWidget
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ItemProperties", meta = (AllowPrivateAccess = "true"))
+		EIemRarity ItemRarity;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ItemProperties", meta = (AllowPrivateAccess = "true"))
+		TArray<bool> ActiveStars;
 public:
 
 	FORCEINLINE UWidgetComponent* GetPickupWidget() const { return PickupWidget; };

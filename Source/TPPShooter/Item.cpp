@@ -9,7 +9,8 @@
 // Sets default values
 AItem::AItem():
 	ItemName(FString("Default")),
-	ItemCount(0)
+	ItemCount(0),
+	ItemRarity(EIemRarity::EIR_Common)
 
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -38,14 +39,8 @@ void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 
 		if (ShooterCharacter)
 		{
-			AItem* Item = Cast<AItem>(this);
-
 			ShooterCharacter->IncrementOverlappedItemCount(1);
-
-			if (Item)
-			{
-				ShooterCharacter->SetOverlappedItem(Item);
-			}
+			ShooterCharacter->SetOverlappedItem(this);
 		}
 	}
 }
@@ -59,7 +54,6 @@ void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		if (ShooterCharacter)
 		{
 			ShooterCharacter->IncrementOverlappedItemCount(-1);
-			ShooterCharacter->SetOverlappedItem(nullptr);
 		}
 	}
 }
@@ -69,12 +63,56 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Hide pickup widget
-	PickupWidget->SetVisibility(false);
+	if (PickupWidget)
+	{
+		// Hide pickup widget
+		PickupWidget->SetVisibility(false);
+	}
+
+	// Sets active stars array based on item rarity
+	SetActiveStars();
 
 	// Setup overlap for AreaSphere
 	AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
 	AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
+}
+
+void AItem::SetActiveStars()
+{
+	// the 0 element isn't used
+	for (int32 i = 0; i <= 5; i++)
+	{
+		ActiveStars.Add(false);
+	}
+
+	switch (ItemRarity)
+	{
+	case EIemRarity::EIR_Damaged:
+		ActiveStars[1] = true;
+		break;
+	case EIemRarity::EIR_Common:
+		ActiveStars[1] = true;
+		ActiveStars[2] = true;
+		break;
+	case EIemRarity::EIR_Uncommon:
+		ActiveStars[1] = true;
+		ActiveStars[2] = true;
+		ActiveStars[3] = true;
+		break;
+	case EIemRarity::EIR_Rare:
+		ActiveStars[1] = true;
+		ActiveStars[2] = true;
+		ActiveStars[3] = true;
+		ActiveStars[4] = true;
+		break;
+	case EIemRarity::EIR_Legendary:
+		ActiveStars[1] = true;
+		ActiveStars[2] = true;
+		ActiveStars[3] = true;
+		ActiveStars[4] = true;
+		ActiveStars[5] = true;
+		break;
+	}
 }
 
 // Called every frame
