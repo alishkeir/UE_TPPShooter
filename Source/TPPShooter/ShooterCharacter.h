@@ -160,6 +160,13 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Items", meta = (AllowPrivateAccess = "true"))
 		class AItem* OverlappedItem;
 
+	// Currently equipped weapon
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+		class AWeapon* EquippedWeapon;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AWeapon> DefaultWeaponClass;
+
 protected:
 
 	// Called when the game starts or when spawned
@@ -227,6 +234,8 @@ protected:
 
 	// Trace for items if overlapped item count is > 0
 	void TraceForItems();
+
+	void SpawnDefaultWeapon();
 
 public:
 
