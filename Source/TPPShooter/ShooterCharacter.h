@@ -235,7 +235,11 @@ protected:
 	// Trace for items if overlapped item count is > 0
 	void TraceForItems();
 
-	void SpawnDefaultWeapon();
+	// Spawn a default weapon and equip it
+	AWeapon* SpawnDefaultWeapon();
+
+	// Takes a weapon and attach it to the mesh
+	void EquipWeapon(AWeapon* WeaponToEquip);
 
 public:
 
