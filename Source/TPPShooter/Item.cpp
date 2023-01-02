@@ -10,7 +10,8 @@
 AItem::AItem():
 	ItemName(FString("Default")),
 	ItemCount(0),
-	ItemRarity(EIemRarity::EIR_Common)
+	ItemRarity(EIemRarity::EIR_Common),
+	ItemState(EIemState::EIS_Pickup)
 
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.

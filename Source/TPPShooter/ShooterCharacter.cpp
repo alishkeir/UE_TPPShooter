@@ -219,6 +219,7 @@ void AShooterCharacter::EquipWeapon(AWeapon* WeaponToEquip)
 		}
 
 		EquippedWeapon = WeaponToEquip;
+		EquippedWeapon->SetItemState(EIemState::EIS_Equipped);
 	}
 }
 
