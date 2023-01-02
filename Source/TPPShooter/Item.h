@@ -58,6 +58,11 @@ protected:
 	*/
 	void SetActiveStars();
 
+	/**
+	 * Sets Properties of the item components based on State
+	*/
+	void SetItemProperties(EIemState State);
+
 public:
 	//Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -124,5 +129,5 @@ public:
 
 	FORCEINLINE EIemState GetItemState() const { return ItemState; };
 
-	FORCEINLINE void SetItemState(EIemState State) const { ItemState = State; };
+	void SetItemState(EIemState State);
 };
