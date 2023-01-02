@@ -130,4 +130,6 @@ public:
 	FORCEINLINE EIemState GetItemState() const { return ItemState; };
 
 	void SetItemState(EIemState State);
+
+	FORCEINLINE USkeletalMeshComponent* GetItemMesh() const { return ItemMesh; };
 };

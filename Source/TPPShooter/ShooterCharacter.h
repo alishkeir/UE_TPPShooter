@@ -241,6 +241,13 @@ protected:
 	// Takes a weapon and attach it to the mesh
 	void EquipWeapon(AWeapon* WeaponToEquip);
 
+	// Detatch weapon and let it fall to the ground
+	void DropWeapon();
+
+	void SelectButtonPressed();
+
+	void SelectButtonReleased();
+
 public:
 
 	/// Called every frame
@@ -270,5 +277,6 @@ public:
 	void IncrementOverlappedItemCount(int8 Amount);
 
 	FORCEINLINE AItem* GetOverlappedItem() { return OverlappedItem; }
+
 	FORCEINLINE void SetOverlappedItem(AItem* Item) { OverlappedItem = Item; }
 };
