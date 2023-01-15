@@ -241,7 +241,7 @@ protected:
 	// Takes a weapon and attach it to the mesh
 	void EquipWeapon(AWeapon* WeaponToEquip);
 
-	// Detatch weapon and let it fall to the ground
+	// Detach weapon and let it fall to the ground
 	void DropWeapon();
 
 	void SelectButtonPressed();
