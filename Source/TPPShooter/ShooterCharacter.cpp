@@ -225,6 +225,9 @@ void AShooterCharacter::DropWeapon()
 		EquippedWeapon->GetItemMesh()->DetachFromComponent(DetachmentTransformRules);
 
 		EquippedWeapon->SetItemState(EIemState::EIS_Falling);
+		EquippedWeapon->ThrowWeapon();
+
+		EquippedWeapon = nullptr;
 	}
 }
 
