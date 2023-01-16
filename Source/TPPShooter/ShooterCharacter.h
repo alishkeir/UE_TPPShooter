@@ -167,6 +167,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AWeapon> DefaultWeaponClass;
 
+	// The item currently hit by our trace in TraceForItems (could be null)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+		AItem* TraceHitItem;
+
 protected:
 
 	// Called when the game starts or when spawned
@@ -247,6 +251,9 @@ protected:
 	void SelectButtonPressed();
 
 	void SelectButtonReleased();
+
+	// Drops currently equipped weapon and equid TraceHitItem
+	void SwapWeapon(AWeapon* WeaponToSwap);
 
 public:
 

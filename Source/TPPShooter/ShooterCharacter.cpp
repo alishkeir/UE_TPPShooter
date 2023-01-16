@@ -156,21 +156,21 @@ void AShooterCharacter::TraceForItems()
 
 		if (ItemTraceResult.bBlockingHit)
 		{
-			AItem* HitItem = Cast<AItem>(ItemTraceResult.Actor);
+			TraceHitItem = Cast<AItem>(ItemTraceResult.Actor);
 
-			if (HitItem && HitItem->GetPickupWidget())
+			if (TraceHitItem && TraceHitItem->GetPickupWidget())
 			{
 				// Show item's pickup widget
-				if (HitItem == GetOverlappedItem())
+				if (TraceHitItem == GetOverlappedItem())
 				{
-					HitItem->GetPickupWidget()->SetVisibility(true);
+					TraceHitItem->GetPickupWidget()->SetVisibility(true);
 				}
 			}
 
 			// We hit an AItem last frame
 			if (TraceHitItemLastFrame)
 			{
-				if (HitItem != TraceHitItemLastFrame)
+				if (TraceHitItem != TraceHitItemLastFrame)
 				{
 					// We are hitting a different AItem this frame from the last frame, or AItem is a nullptr
 					TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);
@@ -178,7 +178,7 @@ void AShooterCharacter::TraceForItems()
 			}
 
 			// Store a ref to HitItem for next frame
-			TraceHitItemLastFrame = HitItem;
+			TraceHitItemLastFrame = TraceHitItem;
 		}
 	} else if (TraceHitItemLastFrame)
 	{
@@ -233,11 +233,28 @@ void AShooterCharacter::DropWeapon()
 
 void AShooterCharacter::SelectButtonPressed()
 {
-	DropWeapon();
+	if (TraceHitItem)
+	{
+		if (TraceHitItem->GetItemState() == EIemState::EIS_Pickup)
+		{
+			auto TraceHitWeapon = Cast<AWeapon>(TraceHitItem);
+
+			if (TraceHitWeapon)
+				SwapWeapon(TraceHitWeapon);
+		}
+	}
 }
 
 void AShooterCharacter::SelectButtonReleased()
 {
+}
+
+void AShooterCharacter::SwapWeapon(AWeapon* WeaponToSwap)
+{
+	TraceHitItem = nullptr;
+	TraceHitItemLastFrame = nullptr;
+	DropWeapon();
+	EquipWeapon(WeaponToSwap);
 }
 
 // Called every frame
